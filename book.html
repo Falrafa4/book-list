@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detail Buku – BukuKu</title>
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f7f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* NAVBAR */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e3a8a;
+      padding: 1rem 2rem;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      flex: 1;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-center {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 9999px;
+      overflow: hidden;
+      width: 70%;
+      max-width: 450px;
+    }
+
+    .search-container input {
+      border: none;
+      padding: 0.8rem 1.2rem;
+      outline: none;
+      font-size: 1rem;
+      flex: 1;
+    }
+
+    .search-container button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: black;
+      padding: 0 0.8rem;
+    }
+
+    /* DETAIL SECTION */
+    .detail-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+
+      display: flex;
+      gap: 2rem;
+    }
+
+    .detail-cover {
+      width: 320px;
+      height: 460px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .detail-info h2 {
+      margin-top: 0;
+      color: #1e3a8a;
+      font-size: 1.7rem;
+    }
+
+    .detail-info p {
+      font-size: 1rem;
+      color: #444;
+      margin: .4rem 0;
+    }
+
+    /* Rekomendasi Section */
+    .section-title {
+      max-width: 1100px;
+      margin: 2rem auto 1rem;
+      font-size: 1.5rem;
+      color: #1e3a8a;
+      font-weight: 700;
+    }
+
+    .books-row {
+      display: flex;
+      gap: 1.2rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .books-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .book {
+      width: 200px;
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .book img {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .book h3 {
+      color: #1e3a8a;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html">
+      <h1>BukuKu</h1>
+    </a>
+
+    <div class="nav-center">
+      <div class="search-container">
+        <input id="searchInput" type="text" placeholder="Cari bukumu di sini..." onkeypress="if(event.key==='Enter'){searchBooks();}">
+        <button onclick="clearSearch()">✖</button>
+        <button onclick="searchBooks()">Cari</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- DETAIL BUKU -->
+  <div class="detail-container" id="detailContainer">
+    Memuat detail buku...
+  </div>
+
+  <!-- Rekomendasi -->
+  <h2 class="section-title">Buku Rekomendasi</h2>
+  <div class="books-row" id="recContainer"></div>
+
+<script>
+
+function clearSearch(){ 
+    document.getElementById("searchInput").value=""; 
+}
+
+function searchBooks(){ 
+    alert("Fitur pencarian halaman detail belum diaktifkan."); 
+}
+
+/* ===== RANDOM DATA ===== */
+function rating() { 
+    return parseFloat((Math.random()*9+1).toFixed(1)); 
+}
+function year(b) {
+    const d=b.volumeInfo.publishedDate;
+    return d?parseInt(d.substring(0,4)):0;
+}
+
+/* ===== MUAT DETAIL BUKU ===== */
+async function loadBookDetail(){
+  const params=new URLSearchParams(window.location.search);
+  const id=params.get("id");
+
+  if(!id){
+    document.getElementById("detailContainer").innerHTML="ID buku tidak ditemukan.";
+    return;
+  }
+
+  const res=await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
+  const b=await res.json();
+
+  const cover = b.volumeInfo.imageLinks?.large ||
+                b.volumeInfo.imageLinks?.medium ||
+                b.volumeInfo.imageLinks?.thumbnail ||
+                "https://via.placeholder.com/240x340";
+
+  console.log(cover);
+
+  const ratingVal = rating();
+
+  document.getElementById("detailContainer").innerHTML = `
+    <img class="detail-cover" src="${cover}">
+    <div class="detail-info">
+      <h2>${b.volumeInfo.title}</h2>
+
+      <p><strong>Penulis:</strong> ${b.volumeInfo.authors?.join(", ") || "Tidak diketahui"}</p>
+      <p><strong>Rating:</strong> ⭐ ${ratingVal}</p>
+      <p><strong>Tanggal Terbit:</strong> ${b.volumeInfo.publishedDate || "Tidak diketahui"}</p>
+
+      <p><strong>Preview:</strong></p>
+      <p>${b.volumeInfo.description?.substring(0,500) || "Tidak ada preview yang tersedia."}...</p>
+    </div>
+  `;
+}
+
+/* ===== MUAT BUKU REKOMENDASI ===== */
+async function loadRecommendations(){
+  const res=await fetch("https://www.googleapis.com/books/v1/volumes?q=subject:fiction&langRestrict=id&maxResults=20");
+  const data=await res.json();
+
+  const rec = (data.items||[]).map(b=>({
+    ...b,
+    rating: rating(),
+    year: year(b)
+  }));
+
+  document.getElementById("recContainer").innerHTML = rec.map(b=>`
+    <div class="book" onclick="window.location.href='book.html?id=${b.id}'">
+      <img src="${b.volumeInfo.imageLinks?.thumbnail || 'https://via.placeholder.com/150x220'}">
+      <h3>${b.volumeInfo.title}</h3>
+    </div>
+  `).join("");
+}
+
+loadBookDetail();
+loadRecommendations();
+
+</script>
+
+</body>
+</html>

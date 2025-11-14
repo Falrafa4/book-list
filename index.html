@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BukuKu</title>
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f7f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* NAVBAR */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e3a8a;
+      padding: 1rem 2rem;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      flex: 1;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-center {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 9999px;
+      overflow: hidden;
+      width: 70%;
+      max-width: 450px;
+    }
+
+    .search-container input {
+      border: none;
+      padding: 0.8rem 1.2rem;
+      outline: none;
+      font-size: 1rem;
+      flex: 1;
+    }
+
+    .search-container button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: black;
+      padding: 0 0.8rem;
+    }
+
+    /* FILTER DROPDOWN NAVBAR */
+    .filter-dropdown-nav {
+      position: relative;
+      margin-left: 1rem;
+    }
+
+    .filter-btn-nav {
+      background: white;
+      color: #1e3a8a;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .nav-dropdown-menu {
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      width: 160px;
+      padding: 6px 0;
+      display: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      z-index: 999;
+    }
+
+    .nav-dropdown-menu button {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /* MAIN CONTENT */
+    main {
+      max-width: 1200px; /* DIBESARKAN */
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    h2 {
+      color: #1e3a8a;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      color: #1e3a8a;
+      margin: 1.5rem 0 0.8rem;
+    }
+
+    /* BOOK ROW */
+    .book-section {
+      position: relative;
+    }
+
+    .books-row {
+      display: flex;
+      gap: 1.2rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 1rem;
+      padding-right: 1rem;
+      position: relative;
+    }
+
+    .books-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* SCROLL BUTTONS (BARU) */
+    .scroll-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(30, 58, 138, 0.65);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 15;
+      transition: 0.2s;
+    }
+
+    .scroll-btn:hover {
+      background: rgba(30, 58, 138, 0.85);
+    }
+
+    .scroll-left { left: -10px; }
+    .scroll-right { right: -10px; }
+
+    /* BOOK CARD (LEBIH BESAR) */
+    .book {
+      width: 210px; /* lebih besar */
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .book img {
+      width: 100%;
+      height: 280px; /* DIBESARKAN */
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.7rem;
+    }
+
+    .book h3 {
+      font-size: 1rem;
+      color: #1e3a8a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .book p {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html">
+      <h1>BukuKu</h1>
+    </a>
+
+    <div class="nav-center">
+      <div class="search-container">
+        <input id="searchInput" type="text" placeholder="cari bukumu di sini.." onkeypress="if(event.key==='Enter'){searchBooks();}">
+        <button onclick="clearSearch()">✖</button>
+        <button onclick="searchBooks()">Cari</button>
+      </div>
+    </div>
+
+    <div class="filter-dropdown-nav">
+      <button class="filter-btn-nav" onclick="toggleNavFilter()">Filter ▼</button>
+      <div id="navFilterMenu" class="nav-dropdown-menu">
+        <button onclick="applyFilter('az')">A - Z</button>
+        <button onclick="applyFilter('za')">Z - A</button>
+        <button onclick="applyFilter('ratingUp')">Rating 1 - 10</button>
+        <button onclick="applyFilter('ratingDown')">Rating 10 - 1</button>
+        <button onclick="applyFilter('year')">Tahun</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- REKOMENDASI -->
+    <div class="book-section">
+      <h2>Buku Rekomendasi</h2>
+      <button class="scroll-btn scroll-left" onclick="scrollLeft('recContainer')">◀</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('recContainer')">▶</button>
+      <div class="books-row" id="recContainer"></div>
+    </div>
+
+    <!-- GENRE -->
+    <h2>Genre Rekomendasi</h2>
+
+    <div class="book-section">
+      <h3>Romance</h3>
+      <button class="scroll-btn scroll-left" onclick="scrollLeft('genreRomance')">◀</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreRomance')">▶</button>
+      <div class="books-row" id="genreRomance"></div>
+    </div>
+
+    <div class="book-section">
+      <h3>Fantasy</h3>
+      <button class="scroll-btn scroll-left" onclick="scrollLeft('genreFantasy')">◀</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreFantasy')">▶</button>
+      <div class="books-row" id="genreFantasy"></div>
+    </div>
+
+    <div class="book-section">
+      <h3>Mystery</h3>
+      <button class="scroll-btn scroll-left" onclick="scrollLeft('genreMystery')">◀</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreMystery')">▶</button>
+      <div class="books-row" id="genreMystery"></div>
+    </div>
+
+    <div class="book-section">
+      <h3>Horror</h3>
+      <button class="scroll-btn scroll-left" onclick="scrollLeft('genreHorror')">◀</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreHorror')">▶</button>
+      <div class="books-row" id="genreHorror"></div>
+    </div>
+
+    <div class="book-section">
+      <h3>Science Fiction</h3>
+      <button class="scroll-btn scroll-left" onclick="scrollLeft('genreSciFi')">◀</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreSciFi')">▶</button>
+      <div class="books-row" id="genreSciFi"></div>
+    </div>
+
+  </main>
+
+  <script>
+    const recContainer = document.getElementById("recContainer");
+
+    const genreContainers = {
+      romance: document.getElementById("genreRomance"),
+      fantasy: document.getElementById("genreFantasy"),
+      mystery: document.getElementById("genreMystery"),
+      horror: document.getElementById("genreHorror"),
+      scifi: document.getElementById("genreSciFi")
+    };
+
+    let recBooks = [];
+
+    function rating() { return parseFloat((Math.random()*9+1).toFixed(1)); }
+    function year(book) {
+      const d = book.volumeInfo.publishedDate;
+      return d ? parseInt(d.substring(0,4)) : 0;
+    }
+
+    function displayBooks(container, items) {
+      container.innerHTML = items.map(b=>`
+        <div class="book" onclick="window.location.href='book.html?id=${b.id}'">
+          <img src="${b.volumeInfo.imageLinks?.thumbnail || 'https://via.placeholder.com/150x220'}">
+          <h3>${b.volumeInfo.title}</h3>
+          <p>${b.volumeInfo.authors?.join(", ") || "Tidak diketahui"}</p>
+          <p style="font-size:.8rem; color:#1e3a8a;">⭐ ${b.rating} — ${b.year}</p>
+        </div>
+      `).join("");
+    }
+
+    async function loadRecommendations() {
+      const res = await fetch("https://www.googleapis.com/books/v1/volumes?q=subject:fiction+inpublisher:gramedia&langRestrict=id&orderBy=relevance&maxResults=20");
+      const data = await res.json();
+
+      recBooks = (data.items || []).map(b=>({
+        ...b,
+        rating: rating(),
+        year: year(b)
+      }));
+
+      recBooks.sort(()=>Math.random()-0.5);
+      displayBooks(recContainer, recBooks);
+    }
+
+    async function loadGenre(genre, container) {
+      const res = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&langRestrict=id&maxResults=20`
+      );
+      const data = await res.json();
+
+      const list = (data.items||[]).map(b=>({
+        ...b,
+        rating: rating(),
+        year: year(b)
+      }));
+
+      displayBooks(container, list);
+    }
+
+    function toggleNavFilter(){
+      const m=document.getElementById("navFilterMenu");
+      m.style.display=m.style.display==="block"?"none":"block";
+    }
+
+    document.addEventListener("click",e=>{
+      const m=document.getElementById("navFilterMenu");
+      const b=document.querySelector(".filter-btn-nav");
+      if(!m.contains(e.target) && !b.contains(e.target)){
+        m.style.display="none";
+      }
+    });
+
+    function applyFilter(type){
+      let sorted=[...recBooks];
+
+      if(type==="az") sorted.sort((a,b)=>a.volumeInfo.title.localeCompare(b.volumeInfo.title));
+      if(type==="za") sorted.sort((a,b)=>b.volumeInfo.title.localeCompare(a.volumeInfo.title));
+      if(type==="ratingUp") sorted.sort((a,b)=>a.rating-b.rating);
+      if(type==="ratingDown") sorted.sort((a,b)=>b.rating-a.rating);
+      if(type==="year") sorted.sort((a,b)=>b.year-a.year);
+
+      displayBooks(recContainer,sorted);
+      document.getElementById("navFilterMenu").style.display="none";
+    }
+
+    function clearSearch(){ document.getElementById("searchInput").value=""; }
+    function searchBooks(){ alert("Fitur pencarian belum aktif."); }
+
+    /* BUTTON SCROLL */
+    function scrollLeft(id){
+      document.getElementById(id).scrollBy({ left: -300, behavior: 'smooth' });
+    }
+    function scrollRight(id){
+      document.getElementById(id).scrollBy({ left: 300, behavior: 'smooth' });
+    }
+
+    loadRecommendations();
+    loadGenre("romance", genreContainers.romance);
+    loadGenre("fantasy", genreContainers.fantasy);
+    loadGenre("mystery", genreContainers.mystery);
+    loadGenre("horror", genreContainers.horror);
+    loadGenre("science fiction", genreContainers.scifi);
+  </script>
+
+</body>
+</html>
