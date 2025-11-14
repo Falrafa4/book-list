@@ -75,7 +75,7 @@
       font-size: 0.95rem;
       color: black;
       padding: 0 0.2rem;
-      margin-right: 2rem;
+      margin-right: 1rem;
     }
 
     .search-container button:first-of-type {
@@ -366,7 +366,7 @@
     <div class="book-section">
       <h2>Buku Rekomendasi</h2>
       <button class="scroll-btn scroll-left" onclick="scrollLeftBtn('recContainer')">◀</button>
-      <button class="scroll-btn scroll-right" onclick="scrollRightBtn('recContainer')">▶</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('recContainer')">▶</button>
       <div class="books-row" id="recContainer"></div>
     </div>
 
@@ -376,35 +376,35 @@
     <div class="book-section">
       <h3>Romance</h3>
       <button class="scroll-btn scroll-left" onclick="scrollLeftBtn('genreRomance')">◀</button>
-      <button class="scroll-btn scroll-right" onclick="scrollRightBtn('genreRomance')">▶</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreRomance')">▶</button>
       <div class="books-row" id="genreRomance"></div>
     </div>
 
     <div class="book-section">
       <h3>Fantasy</h3>
       <button class="scroll-btn scroll-left" onclick="scrollLeftBtn('genreFantasy')">◀</button>
-      <button class="scroll-btn scroll-right" onclick="scrollRightBtn('genreFantasy')">▶</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreFantasy')">▶</button>
       <div class="books-row" id="genreFantasy"></div>
     </div>
 
     <div class="book-section">
       <h3>Mystery</h3>
       <button class="scroll-btn scroll-left" onclick="scrollLeftBtn('genreMystery')">◀</button>
-      <button class="scroll-btn scroll-right" onclick="scrollRightBtn('genreMystery')">▶</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreMystery')">▶</button>
       <div class="books-row" id="genreMystery"></div>
     </div>
 
     <div class="book-section">
       <h3>Horror</h3>
       <button class="scroll-btn scroll-left" onclick="scrollLeftBtn('genreHorror')">◀</button>
-      <button class="scroll-btn scroll-right" onclick="scrollRightBtn('genreHorror')">▶</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreHorror')">▶</button>
       <div class="books-row" id="genreHorror"></div>
     </div>
 
     <div class="book-section">
       <h3>Science Fiction</h3>
       <button class="scroll-btn scroll-left" onclick="scrollLeftBtn('genreSciFi')">◀</button>
-      <button class="scroll-btn scroll-right" onclick="scrollRightBtn('genreSciFi')">▶</button>
+      <button class="scroll-btn scroll-right" onclick="scrollRight('genreSciFi')">▶</button>
       <div class="books-row" id="genreSciFi"></div>
     </div>
 
@@ -538,7 +538,7 @@
     function scrollLeftBtn(id) {
       document.getElementById(id).scrollBy({ left: -300, behavior: 'smooth' });
     }
-    function scrollRightBtn(id) {
+    function scrollRight(id) {
       document.getElementById(id).scrollBy({ left: 300, behavior: 'smooth' });
     }
 
