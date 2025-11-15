@@ -14,6 +14,10 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: "Poppins", sans-serif;
       background: #f7f9fb;
@@ -271,6 +275,7 @@
       const q = document.getElementById("searchInput").value.trim();
       if (!q) return;
       performSearch(q);
+      window.location.href = '#';
     }
 
     // DETEKSI QUERY SEARCH DI URL
